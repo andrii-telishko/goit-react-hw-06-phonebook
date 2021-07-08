@@ -56,7 +56,15 @@ const middleware = [
 // };
 
 const contactsList = createReducer(contacts, {
-  [actions.addContact]: (state, { payload }) => [...state, payload],
+  [actions.addContact]: (state, { payload }) => {
+    if (state.map(contact => contact.name).includes(payload.name)) {
+     return  alert (`${payload.name} is already exist`)
+    };
+         
+    return [...state, payload]
+    
+     
+  },
   [actions.deleteContact]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
 });
@@ -78,8 +86,9 @@ const filter = createReducer('', {
 // });
 
 const persistConfig = {
-  key: contacts,
-  storage
+  key: 'contacts',
+  storage,
+  blacklist: ['filter']
 };
 
 const persistedReducer = persistReducer(persistConfig, combineReducers({

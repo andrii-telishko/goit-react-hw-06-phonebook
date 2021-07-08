@@ -4,6 +4,7 @@ import './ContactForm.scss'
 import '../styles/base.scss';
 import { connect } from 'react-redux';
 import actions from '../../redux/actions';
+import storage from 'redux-persist/lib/storage';
 
 class ContactForm extends Component {
     static propTypes = {
@@ -22,8 +23,12 @@ class ContactForm extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         
-        this.props.onSubmit(this.state.name, this.state.number);
-        this.reset();
+        if (this.state.name !== '' && this.state.number !== '') {
+             this.props.onSubmit(this.state.name, this.state.number);
+             this.reset();
+            return
+        };
+     alert ('Please fill empty fields')
   };
 
     reset() {
