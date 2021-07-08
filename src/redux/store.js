@@ -39,13 +39,15 @@ import types from './types'
 //   }
 // };
 
-// const middleware = [
-//   ...getDefaultMiddleware({
-//     serializableCheck: {
-//       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-//     },
-//   })
-// ];
+const middleware = [
+  ...getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  })
+];
+
+
 
 // const contactsPersistConfig = {
 //   key: 'contacts',
@@ -59,28 +61,43 @@ const contactsList = createReducer(contacts, {
     state.filter(({ id }) => id !== payload),
 });
 
+// if (contactsList.includes(contactName)) {
+//       alert(`${contactName} is already in contacts`)
+//     } else {
+//       this.setState(({ contacts }) => ({
+//         contacts: [...contacts, newContact],
+//       }));
+
 const filter = createReducer('', {
   [actions.changeFilter]: (_, {payload}) => payload
 })
 
-const combineReducer = combineReducers({
-  contacts: contactsList,
-  filter
-});
-
-// const store = configureStore({
-//   reducer: {
-//     contacts: persistReducer(contactsPersistConfig, combineReducer),
-//   },
-//   middleware,
-//   devTools: process.env.NODE_ENV === 'development',
+// const combineReducer = combineReducers({
+//   contacts: contactsList,
+//   filter
 // });
 
-// const persistor = persistStore(store);
+const persistConfig = {
+  key: contacts,
+  storage
+};
 
-const store = createStore(combineReducer);
+const persistedReducer = persistReducer(persistConfig, combineReducers({
+  contacts: contactsList,
+  filter
+}))
 
-export default { store};
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware,
+  devTools: process.env.NODE_ENV === 'development',
+});
+
+const persistor = persistStore(store);
+
+// const store = createStore(combineReducer);
+
+export default { store, persistor};
 
 // const items = createReducer([], {
 //   [actions.addTodo]: (state, { payload }) => [...state, payload],

@@ -21,6 +21,7 @@ class ContactForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        
         this.props.onSubmit(this.state.name, this.state.number);
         this.reset();
   };
@@ -53,6 +54,8 @@ class ContactForm extends Component {
         );
     };
 };
+
+
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: (name, number) => dispatch(actions.addContact(name, number)),
