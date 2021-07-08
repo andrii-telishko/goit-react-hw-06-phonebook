@@ -4,7 +4,6 @@ import './ContactForm.scss'
 import '../styles/base.scss';
 import { connect } from 'react-redux';
 import actions from '../../redux/actions';
-import storage from 'redux-persist/lib/storage';
 
 class ContactForm extends Component {
     static propTypes = {
@@ -22,9 +21,9 @@ class ContactForm extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        
-        if (this.state.name !== '' && this.state.number !== '') {
-             this.props.onSubmit(this.state.name, this.state.number);
+        const { name, number } = this.state;
+        if (name !== '' && number !== '') {
+             this.props.onSubmit(name, number);
              this.reset();
             return
         };
@@ -59,8 +58,6 @@ class ContactForm extends Component {
         );
     };
 };
-
-
 
 const mapDispatchToProps = dispatch => ({
   onSubmit: (name, number) => dispatch(actions.addContact(name, number)),
